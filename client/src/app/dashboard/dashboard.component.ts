@@ -18,38 +18,42 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     const secondsCounter = interval(2000);
-    this.querySubsciption = secondsCounter.subscribe(n=>
+    this.querySubsciption = secondsCounter.subscribe(n =>
       //console.log(`It's been ${n} seconds since subscribing!`)
       this.getLocation()
-      );
+    );
   }
 
-  getLocation(){
+  getLocation() {
     var positionOption = { enableHighAccuracy: false, maximumAage: Infinity, timeout: 6000 };
-    var gpsSuccess = function (currentPosition){
+    var gpsSuccess = function (currentPosition) {
 
     };
-    var gpsFailed = function(){
+    var gpsFailed = function () {
       //
       //
     };
-  
+
     //locate the user
-    if(navigator.geolocation){
-      navigator.geolocation.getCurrentPosition((position=> {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position => {
         this.lat = position.coords.latitude;
         this.lng = position.coords.longitude;
-        this.data = {"lat": position.coords.latitude, "long": position.coords.longitude};
-        //console.log(this.data);
-        this._backendService.setLocation(this.data).subscribe((res)=>console.log("Success"));
+        this.data = { "lat": position.coords.latitude, "long": position.coords.longitude };
+        console.log(this.data);
+        this.querySubsciption = this._backendService.setLocation(this.data).subscribe(
+          (res) => console.log("Success"),
+          (error) => {console.log(error.errorMessage)},
+          () => { }
+        );
       }), gpsFailed, positionOption);
     }
 
   };
 
-  ngOnDestroy(){
-    if(this.querySubsciption){
-      this.querySubsciption.unsubscribe(); 
+  ngOnDestroy() {
+    if (this.querySubsciption) {
+      this.querySubsciption.unsubscribe();
     }
   }
 

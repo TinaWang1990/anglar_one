@@ -20,6 +20,7 @@ export class SignupComponent implements OnInit {
   }
 
   setUser(formData) {
+    console.log(formData);
     this.dataLoading = true;
     this.querySubsciption = this._backendService.setUser(formData).subscribe(
       (res)=>{
